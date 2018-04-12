@@ -14,5 +14,5 @@ with open(url_path) as csvfile:
 urls = np.array(urls)
 np.random.shuffle(urls)
 
-for url in urls:
-    print(url[0] + " " +url[1])
+# for url in urls:
+#     print(url[0] + " " +url[1])
