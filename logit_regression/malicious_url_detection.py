@@ -55,12 +55,22 @@ def get_urls(url_path):
     return urls
 
 
+def get_train_data(dataset):
+    urls = []
+    labels = []
+    for data in dataset:
+        urls.append(data[0])
+        labels.append(float(data[1]))
+
+    return urls, labels
+
+
 def train(dataset):
     urls = []
     labels = []
     for data in dataset:
         urls.append(data[0])
-        labels.append(data[1])
+        labels.append(float(data[1]))
 
     vectorizer = TfidfVectorizer(tokenizer=get_tokenizers)
 
@@ -71,6 +81,16 @@ def train(dataset):
     # print(X)
 
     X_train, X_test, labels_train, labels_test = train_test_split(X, labels, test_size=0.2)
+
+    X_train_array = X_train.toarray()
+
+    input_num = len(X_train_array[0])
+    lgs = LogitRegression(input_num)
+    # print(np.shape(X_train_array))
+    lgs.train(X_train_array, labels_train, 1, 0.01)
+
+    # return lgs.weights
+    return vectorizer, lgs
 
 
     # ----------------      version 1  -------------------------- #
@@ -90,7 +110,7 @@ def train(dataset):
     # X_train = np.array(X_train)
     # X_test = np.array(X_test)
 
-    X_train_array = X_train.toarray()
+    # X_train_array = X_train.toarray()
 
     # lgs = LogitRegression()
     # weights = lgs.train_logit_regression(X_train.toarray(), labels_train.T, 1, 0.01)
@@ -106,33 +126,83 @@ def train(dataset):
 
     # ----------------      version 1  -------------------------- #
 
+
+def train(X_train, labels_train):
+    X_train_array = X_train.toarray()
+
     input_num = len(X_train_array[0])
     lgs = LogitRegression(input_num)
+    # print(np.shape(X_train_array))
+    lgs.train(X_train_array, labels_train, 1, 0.01)
 
-    lgs.train(X_train_array, labels_train, 10, 0.01)
-
-    return lgs.weights
-
+    # return lgs.weights
+    return lgs
 
 
-
+def t_lgs_model(lgs, X_test_array, labels_test):
+    matchCount = 0
+    for i in range(len(X_test_array)):
+        predict = lgs.calc_output(X_test_array[i])[0] > 0.5
+        if predict == bool(labels_test[i]):
+            matchCount += 1
+            print('matched')
+        else:
+            print('did not match')
+    accuracy = float(matchCount) / len(X_test_array)
+    return accuracy
 
 
 if __name__ == '__main__':
     url_path = '/Users/guoyifeng/PycharmProjects/MaliciousURLDetection/logit_regression/urls.csv'
     dataset = get_urls(url_path)
 
+    vectorizer = TfidfVectorizer(tokenizer=get_tokenizers)
+
+    urls, labels = get_train_data(dataset)
+
+    X = vectorizer.fit_transform(urls)
+
+    X_train, X_test, labels_train, labels_test = train_test_split(X, labels, test_size=0.2)
+
+    lgs = train(X_train, labels_train)
+
+    X_test_array = X_test.toarray()
+
+    # for row in X_test_array:
+    #     print(lgs.calc_output(row))
+
+    # for i in range(len(X_test_array)):
+    #     # print(type(lgs.calc_output(X_test_array[i])))
+    #     print(labels_test[i])
+    #     print(lgs.calc_output(X_test_array[i]))
+
+    accuracy = t_lgs_model(lgs, X_test_array, labels_test)
+    print("The accuracy of model is {}".format(accuracy))
+
     # vectorizer, lgs = train(dataset)
 
-    weights = train(dataset)
-    # accuracy = train(dataset)
+    # weights = train(dataset)
+    # # accuracy = train(dataset)
+    #
+    # # print(accuracy)
+    #
+    # print(type(weights))
+    #
+    # X_predict = ['wikipedia.com','google.com/search=faizanahad','pakistanifacebookforever.com/getpassword.php/','www.radsport-voggel.de/wp-admin/includes/log.exe','ahrenhei.without-transfer.ru/nethost.exe']
 
-    # print(accuracy)
 
-    print(weights)
 
-    X_predict = ['wikipedia.com','google.com/search=faizanahad','pakistanifacebookforever.com/getpassword.php/','www.radsport-voggel.de/wp-admin/includes/log.exe','ahrenhei.without-transfer.ru/nethost.exe']
 
+
+
+
+
+
+
+
+
+
+    # --------------------- version1 ------------------------------ #
     # X_predict = ['http://www.paypal.com.serv-5-redirect.aortadobrasil.com/cgi-bin/us/webscr.php?cmd=_login-run']
 
     # for i in range(len(X_predict)):
