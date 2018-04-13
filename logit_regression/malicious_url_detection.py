@@ -72,6 +72,8 @@ def train(dataset):
 
     X_train, X_test, labels_train, labels_test = train_test_split(X, labels, test_size=0.2)
 
+
+    # ----------------      version 1  -------------------------- #
     # print(X_train.toarray())
 
     # print(X_train)
@@ -84,23 +86,35 @@ def train(dataset):
     # return vectorizer, lgs
 
     # labels_train = np.array(labels_train)
-    labels_test = np.array(labels_test)
+    # labels_test = np.array(labels_test)
     # X_train = np.array(X_train)
     # X_test = np.array(X_test)
 
     X_train_array = X_train.toarray()
 
-    lgs = LogitRegression()
+    # lgs = LogitRegression()
     # weights = lgs.train_logit_regression(X_train.toarray(), labels_train.T, 1, 0.01)
-    for i in range(len(X_train_array)):
-        print(X_train_array[i])
-        weights = lgs.train_logit_regression(X_train_array[i], labels_train[i], 1, 0.01)
-    print(weights)
+    # for i in range(len(X_train_array)):
+    #     print(X_train_array[i])
+    #     weights = lgs.train_logit_regression(X_train_array[i], labels_train[i], 1, 0.01)
+    # print(weights)
     # X_train_array = X_train.toarray()
     # labels_train_array =
-    accuracy = lgs.test_accuarcy(X_test.toarray(), labels_test.T, weights)
+    # accuracy = lgs.test_accuarcy(X_test.toarray(), labels_test.T, weights)
 
-    return accuracy
+    # return accuracy
+
+    # ----------------      version 1  -------------------------- #
+
+    input_num = len(X_train_array[0])
+    lgs = LogitRegression(input_num)
+
+    lgs.train(X_train_array, labels_train, 10, 0.01)
+
+    return lgs.weights
+
+
+
 
 
 
@@ -110,10 +124,12 @@ if __name__ == '__main__':
 
     # vectorizer, lgs = train(dataset)
 
-    train(dataset)
+    weights = train(dataset)
     # accuracy = train(dataset)
 
     # print(accuracy)
+
+    print(weights)
 
     X_predict = ['wikipedia.com','google.com/search=faizanahad','pakistanifacebookforever.com/getpassword.php/','www.radsport-voggel.de/wp-admin/includes/log.exe','ahrenhei.without-transfer.ru/nethost.exe']
 
