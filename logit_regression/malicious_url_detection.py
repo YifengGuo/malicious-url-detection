@@ -65,32 +65,32 @@ def get_train_data(dataset):
     return urls, labels
 
 
-def train(dataset):
-    urls = []
-    labels = []
-    for data in dataset:
-        urls.append(data[0])
-        labels.append(float(data[1]))
-
-    vectorizer = TfidfVectorizer(tokenizer=get_tokenizers)
-
-    # print (vectorizer)
-
-    X = vectorizer.fit_transform(urls)
-
-    # print(X)
-
-    X_train, X_test, labels_train, labels_test = train_test_split(X, labels, test_size=0.2)
-
-    X_train_array = X_train.toarray()
-
-    input_num = len(X_train_array[0])
-    lgs = LogitRegression(input_num)
-    # print(np.shape(X_train_array))
-    lgs.train(X_train_array, labels_train, 1, 0.01)
-
-    # return lgs.weights
-    return vectorizer, lgs
+# def train(dataset):
+#     urls = []
+#     labels = []
+#     for data in dataset:
+#         urls.append(data[0])
+#         labels.append(float(data[1]))
+#
+#     vectorizer = TfidfVectorizer(tokenizer=get_tokenizers)
+#
+#     # print (vectorizer)
+#
+#     X = vectorizer.fit_transform(urls)
+#
+#     # print(X)
+#
+#     X_train, X_test, labels_train, labels_test = train_test_split(X, labels, test_size=0.2)
+#
+#     X_train_array = X_train.toarray()
+#
+#     input_num = len(X_train_array[0])
+#     lgs = LogitRegression(input_num)
+#     # print(np.shape(X_train_array))
+#     lgs.train(X_train_array, labels_train, 1, 0.01)
+#
+#     # return lgs.weights
+#     return vectorizer, lgs
 
 
     # ----------------      version 1  -------------------------- #
@@ -133,7 +133,7 @@ def train(X_train, labels_train):
     input_num = len(X_train_array[0])
     lgs = LogitRegression(input_num)
     # print(np.shape(X_train_array))
-    lgs.train(X_train_array, labels_train, 1, 0.01)
+    lgs.train(X_train_array, labels_train, 10, 0.1)
 
     # return lgs.weights
     return lgs
@@ -142,8 +142,12 @@ def train(X_train, labels_train):
 def t_lgs_model(lgs, X_test_array, labels_test):
     matchCount = 0
     for i in range(len(X_test_array)):
-        predict = lgs.calc_output(X_test_array[i])[0] > 0.5
-        if predict == bool(labels_test[i]):
+        # predict = lgs.calc_output(X_test_array[i])[0] > 0.5
+        if lgs.calc_output(X_test_array[i])[0] > 0.5:
+            predict = 1
+        else:
+            predict = 0
+        if predict == labels_test[i]:
             matchCount += 1
             print('matched')
         else:
@@ -188,9 +192,15 @@ if __name__ == '__main__':
     #
     # print(type(weights))
     #
-    # X_predict = ['wikipedia.com','google.com/search=faizanahad','pakistanifacebookforever.com/getpassword.php/','www.radsport-voggel.de/wp-admin/includes/log.exe','ahrenhei.without-transfer.ru/nethost.exe']
+    X_predict = ['wikipedia.com', 'google.com/search=faizanahad', 'pakistanifacebookforever.com/getpassword.php/',
+                 'www.radsport-voggel.de/wp-admin/includes/log.exe', 'ahrenhei.without-transfer.ru/nethost.exe',
+                 'www.itidea.it/centroesteticosothys/img/_notes/gum.exe']
 
-
+    X_predict = vectorizer.transform(X_predict)
+    X_predict = X_predict.toarray()
+    print(X_predict)
+    for j in range(len(X_predict)):
+        print(lgs.calc_output(X_predict[j]))
 
 
 

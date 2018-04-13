@@ -10,7 +10,7 @@ class LogitRegression(object):
 
     def __init__(self, input_num):
         # self.weights = [0.0 for _ in range(input_num)]  # by default each weight for features is set as 1
-        self.weights = np.ones((input_num, 1))
+        self.weights = np.zeros((input_num, 1))
         self.bias = 0.0
     #
     # def train_logit_regression(self, X_train, labels_train, iterations, ita):
@@ -72,7 +72,7 @@ class LogitRegression(object):
         :return: 
         '''
         for i in range(iteration):
-            # print('iteration: %d ' %i)
+            print('iteration: {}'.format(i))
             self.train_one_iteration(input_vecs, labels, rate)
 
     def train_one_iteration(self, input_vecs, labels, rate):
@@ -114,8 +114,7 @@ class LogitRegression(object):
         # print(np.shape(input_vec))
         # print(np.shape(self.weights))
         self.weights = self.weights + error[0] * input_vec.T * rate
+        # print(self.weights.T)
 
-
-        self.bias = error * rate
-        # print(error)
-        print(self.weights.T)
+    def update_weights_SGD(self, input_vec, output, label, rate):
+        error = label - output
