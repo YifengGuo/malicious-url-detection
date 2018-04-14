@@ -9,7 +9,7 @@ def sigmoid(x):
 class LogitRegression(object):
 
     def __init__(self, input_num):
-        # self.weights = [0.0 for _ in range(input_num)]  # by default each weight for features is set as 1
+        # self.weights = [0.0 for _ in range(input_num)]  # by default each weight for features is set as 0
         self.weights = np.zeros((input_num, 1))
         self.bias = 0.0
     #

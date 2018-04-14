@@ -133,7 +133,7 @@ def train(X_train, labels_train):
     input_num = len(X_train_array[0])
     lgs = LogitRegression(input_num)
     # print(np.shape(X_train_array))
-    lgs.train(X_train_array, labels_train, 10, 0.1)
+    lgs.train(X_train_array, labels_train, 1, 0.5)
 
     # return lgs.weights
     return lgs
@@ -181,6 +181,7 @@ if __name__ == '__main__':
     #     print(lgs.calc_output(X_test_array[i]))
 
     accuracy = t_lgs_model(lgs, X_test_array, labels_test)
+    print("The weights of model is {}".format(lgs.weights))
     print("The accuracy of model is {}".format(accuracy))
 
     # vectorizer, lgs = train(dataset)
@@ -198,7 +199,7 @@ if __name__ == '__main__':
 
     X_predict = vectorizer.transform(X_predict)
     X_predict = X_predict.toarray()
-    print(X_predict)
+    # print(X_predict)
     for j in range(len(X_predict)):
         print(lgs.calc_output(X_predict[j]))
 
