@@ -115,6 +115,3 @@ class LogitRegression(object):
         # print(np.shape(self.weights))
         self.weights = self.weights + error[0] * input_vec.T * rate
         # print(self.weights.T)
-
-    def update_weights_SGD(self, input_vec, output, label, rate):
-        error = label - output
